@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bir Varmış Bir Yokmuş | Türk Masalları</title>
+  <style>
+    /* 1. Sayfanın temel renkleri ve yazıları */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: #101b30;
+      color: #f5f0e6;
+      font-family: Arial, sans-serif;
+      line-height: 1.7;
+    }
+    header, main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 24px;
+    }
+    .ust-yazi {
+      color: #dfbb75;
+      font-size: 12px;
+      letter-spacing: 3px;
+    }
+    header { padding-top: 54px; padding-bottom: 42px; }
+    h1, h2, h3 { font-family: Georgia, serif; line-height: 1.25; }
+    h1 { font-size: 52px; margin: 18px 0; }
+    h1 span { color: #dfbb75; }
+    header p { max-width: 540px; color: #c1cad8; }
+    .cizgi { border: 0; border-top: 1px solid #596078; margin-top: 35px; }
+    h2 { font-size: 30px; margin: 0 0 12px; }
+    .aciklama { color: #c1cad8; }
+    .taslak { border-left: 3px solid #dfbb75; padding-left: 14px; font-size: 14px; }
+
+    /* 2. Arama alanı */
+    label { display: block; margin-top: 24px; margin-bottom: 8px; }
+    input {
+      width: 100%; padding: 14px; font-size: 16px;
+      background-color: #192842; color: #fff;
+      border: 1px solid #66738a; border-radius: 6px;
+    }
+    input::placeholder { color: #bdc6d5; }
+    #sonuc { color: #c1cad8; font-size: 14px; }
+
+    /* 3. Masal kartları: bilgisayarda üç sütun */
+    .masallar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .kart {
+      background-color: #192842; border: 1px solid #45536b;
+      border-radius: 8px; padding: 24px;
+      display: flex; flex-direction: column; align-items: flex-start;
+    }
+    .numara { color: #dfbb75; font-family: Georgia, serif; font-size: 24px; }
+    .kart h3 { font-size: 24px; margin: 16px 0 8px; }
+    .kart p { color: #c1cad8; margin-top: 0; margin-bottom: 24px; }
+    button {
+      background-color: #dfbb75; color: #101b30;
+      border: 0; border-radius: 5px; padding: 12px 18px;
+      font-size: 15px; font-weight: bold; cursor: pointer;
+    }
+    .kart button { margin-top: auto; }
+    button:hover { background-color: #f1d49e; }
+    button:focus-visible, input:focus-visible, a:focus-visible {
+      outline: 3px solid #fff; outline-offset: 4px;
+    }
+
+    /* 4. Seçilen masalın okuma alanı */
+    #okuma {
+      background-color: #f5f0e6; color: #273247;
+      border-radius: 8px; padding: 32px; margin-top: 32px;
+      scroll-margin-top: 24px;
+    }
+    #okuma h2 { color: #17243b; }
+    #okuma p { max-width: 680px; }
+    .anlatim, .kaynak { font-size: 13px; }
+    .anlatim { letter-spacing: 2px; }
+    .kaynak { border-top: 1px solid #b8b1a5; padding-top: 18px; }
+    #okuma a { color: #33496d; }
+    #okuma a:focus-visible { outline-color: #17243b; }
+    [hidden] { display: none !important; }
+
+    /* 5. Tablet ve telefonda sütun sayısını azalt */
+    @media (max-width: 800px) {
+      .masallar { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .masallar { grid-template-columns: 1fr; }
+      h1 { font-size: 38px; }
+      header, main { padding-left: 20px; padding-right: 20px; }
+      #okuma { padding: 24px; }
+    }
+    /* Düğmeye basıldığında kullanılan okuma renkleri */
+    #okuma.gece { background-color: #192842; color: #f5f0e6; }
+    #okuma.gece h2, #okuma.gece a { color: #dfbb75; }
+    #okuma.gece a:focus-visible { outline-color: #dfbb75; }
+    #renk-degistir { margin-right: 8px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="ust-yazi">TÜRK MASALLARI DERLEMESİ</div>
+    <h1>Bir varmış,<br><span>bir yokmuş.</span></h1>
+    <p>Sözcüklerle kurulan dünyalara küçük bir yolculuk.<br>Türk masal geleneğinden sekiz hikâye.</p>
+    <hr class="cizgi">
+  </header>
+  <main>
+    <h2>Masal seçkisi</h2>
+    <p class="aciklama">Bir masal seçerek okuma alanını açabilirsiniz.</p>
+    <p class="taslak">Bu seçkide kaynaklara dayalı, kısaltılmış masal anlatımları yer alır. Tam kaynak metinleri için her masalın altındaki bağlantıyı kullanabilirsiniz.</p>
+    <label for="arama">Masal adına göre ara</label>
+    <input id="arama" type="search" placeholder="Örneğin: Keloğlan" autocomplete="off">
+    <p id="sonuc" role="status">8 masal gösteriliyor.</p>
+    <section class="masallar" aria-label="Masal listesi">
+      <article class="kart">
+        <span class="numara">01</span>
+        <h3>Keloğlan ve Altın Bülbül</h3>
+        <p>Altın bir bülbülün peşinde, uzak bir yolculuk.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Bir padişah camdan bir cami yaptırmış. Yaşlı bir adam, bu yapıya Altın Bülbül’ün yakışacağını söylemiş. Bunun üzerine padişahın üç oğlu kuşu aramaya çıkmış. Büyük kardeşler kolay yolları seçerken küçük oğul güçlüklerle dolu yola girmiş.</p>
+          <p>Genç şehzade, karşılaştığı yaşlı birinin öğütlerini dinlemiş. Devleri aşmış, peri kızlarından yardım almış ve sonunda kuşu bulmuş. Dönüşte kardeşlerine de yardım etmiş. Ancak kardeşleri onu kıskanarak suya atmış, bülbülü kendileri bulmuş gibi saraya götürmüş. Kuş orada hiç ötmemiş.</p>
+          <p>Kurtulan şehzade, Keloğlan kılığına girerek bir handa çalışmaya başlamış. Hastalanan hancı için camiden su almaya gittiğinde bülbül onu görüp ötmüş. Böylece gerçek ortaya çıkmış. Padişah küçük oğlunu tanımış, diğer oğullarını yaptıkları kötülük yüzünden uzaklaştırmış.</p>
+          <p class="kaynak">Kaynak: <a href="https://kulturportali.gov.tr/portal/keloglanvealtinbulbulmasali" target="_blank" rel="noopener">Türkiye Kültür Portalı — Osman Saygı derlemesi</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+      <article class="kart">
+        <span class="numara">02</span>
+        <h3>Ali Cengiz Oyunu</h3>
+        <p>Biçim değiştirme sanatını öğrenen bir gencin mücadelesi.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Sarayda çalışan bir genç, Ali Cengiz oyununu öğrenmeye gönüllü olmuş. Yolda karşılaştığı adamın bu işin ustası olduğunu öğrenince onunla bir mağaraya gitmiş. Oradaki tutsak kız, ustanın sırrını öğrenenleri öldürdüğünü söylemiş. Genç de öğrendiklerini gizleyip hiçbir şey anlamıyormuş gibi davranmış.</p>
+          <p>Ustası onu umutsuz bulup bırakınca genç annesine dönmüş. Öğrendiği oyunlarla hayvan biçimine giriyor, annesi onu satıyor, sonra yeniden insan olup eve geliyormuş. Fakat Ali Cengiz bir gün öğrencisini tanımış. Aralarında türlü biçimlere girerek sürdürdükleri bir kovalamaca başlamış.</p>
+          <p>Genç önce kuşa, ardından padişahın yanına düşen bir elmaya, sonra da darı tanelerine dönüşmüş. Usta taneleri yemek için tavuk olunca genç sansar olup onu yenmiş. Padişah genci ödüllendirmiş. Genç, kendisine yardım eden kızı da kurtarmış ve onunla evlenmiş.</p>
+          <p class="kaynak">Kaynak: <a href="https://bilgebaba.com/alicengiz-oyunu" target="_blank" rel="noopener">Bilge Baba — Selâmi Münir Yurdatap derlemesi</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+      <article class="kart">
+        <span class="numara">03</span>
+        <h3>Nardaniye Hanım</h3>
+        <p>Kıskançlık yüzünden evinden uzaklaştırılan bir genç kız.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Nardaniye Hanım’ın üvey annesi ona kötülük yapmak için bir düzen kurmuş. Babası, karısının yalanlarına inanıp kızını dağda bırakmış. Yalnız kalan Nardaniye, uzakta gördüğü ışığa doğru yürümüş ve kırk haramilerin evine ulaşmış. Başından geçenleri dinleyen haramiler onu kardeşleri kabul etmiş.</p>
+          <p>Üvey anne, Nardaniye’nin yaşadığını öğrenince kılık değiştirerek evin önüne gelmiş. İlk denemesinde getirdiği zehirli kirazları kızın kuşları yemiş. Daha sonra zehirli sakız satmış. Nardaniye sakızı çiğneyince yere yığılmış. Kardeşleri onu öldü sanmış, gömmeye kıyamayarak bir tabuta koymuş.</p>
+          <p>Bir şehzade tabutu görmüş ve sarayına götürmüş. Saraydaki lala, kızın ağzındaki sakızı çıkarınca Nardaniye yeniden kendine gelmiş. Şehzadeyle evlenmiş. Sonunda babası da gerçeği öğrenerek kızına kavuşmuş; üvey annenin yaptıkları ortaya çıkmış.</p>
+          <p class="kaynak">Kaynak: <a href="https://bilgebaba.com/nardaniye-hanim" target="_blank" rel="noopener">Bilge Baba — Pertev Naili Boratav, Zaman Zaman İçinde aktarımı</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+      <article class="kart">
+        <span class="numara">04</span>
+        <h3>Tuz Kadar Sevgi</h3>
+        <p>Değeri ancak yokluğunda anlaşılan bir sevgi.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Bir padişah, üç oğluna kendisini ne kadar sevdiklerini sormuş. Büyük oğulları değerli şeylerden söz etmiş. Küçük oğlu ise onu tuz kadar sevdiğini söylemiş. Padişah bu cevabı küçümseme saymış ve oğlunu öldürtmeye karar vermiş. Ancak görevliler gence acıyarak onu serbest bırakmış.</p>
+          <p>Genç başka bir ülkeye gitmiş. Yaşlı bir kadın onu yanına almış. O ülkede hükümdarı seçmek için bir kuş uçuruluyormuş. Kuş tekrar tekrar gencin başına konunca halk onu padişah kabul etmiş. Genç, ülkesini adaletle yönetmiş.</p>
+          <p>Yıllar sonra babasını bir ziyafete çağırmış. Sofradaki yemeklerin hepsini tuzsuz hazırlatmış. Babası yemekleri tatsız bulunca genç kim olduğunu açıklamış. Tuzun sıradan görünse de ne kadar gerekli olduğunu anlatmış. Baba, oğlunun yıllar önceki sözünü sonunda anlamış. Barışmışlar; genç de kendi ülkesini yönetmeyi sürdürmüş.</p>
+          <p class="kaynak">Kaynak: <a href="https://www.masaldergisi.com/sayilar/2025/sayi-28/tuz-kadar-sevgi/" target="_blank" rel="noopener">Masal Dergisi — Sayı 28, Tuz Kadar Sevgi</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+      <article class="kart">
+        <span class="numara">05</span>
+        <h3>Üç Turunçlar</h3>
+        <p>Üç meyvenin içinde saklı, büyülü bir arayış.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Bir şehzade, yaşlı bir kadının testisini kırmış. Kadının sözü üzerine Üç Turunçlar’ın peşine düşmüş. Yolculuğunda yardım ettiği aslan ona yol göstermiş. Şehzade, devin yaşadığı yerde hayvanlara uygun yiyecekler vermiş ve karşılaştığı engelleri aşarak üç turuncu almış. Yardım ettikleri, kaçarken ona zarar vermemiş.</p>
+          <p>Turunçları su yanında açması gerekiyormuş. Bunu unutarak açtığı ilk iki meyveden çıkan kızlar susuz kalmış. Üçüncüsünü göl kenarında açmış ve içinden çıkan kızı kurtarmış. Ona yüzük verip düğün hazırlıkları için ayrılmış.</p>
+          <p>Başka bir kız, büyüyle genç kızı güvercine dönüştürüp onun yerine geçmiş. Gerçek kızın serüveni güvercinden ağaca, ağaçtan tahta parçasına uzanmış. Sonunda yaşlı bir kadının evinde yeniden insan olmuş. Şehzadeye gönderdiği yemeğin içine yüzüğünü koymuş. Yüzüğü tanıyan şehzade gerçeği öğrenmiş ve sevdiğine kavuşmuş.</p>
+          <p class="kaynak">Kaynak: <a href="https://bilgebaba.com/uc-turunclar/" target="_blank" rel="noopener">Bilge Baba — Nebahat Çetin derlemesi</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+      <article class="kart">
+        <span class="numara">06</span>
+        <h3>Kırkıncı Oda</h3>
+        <p>Yasak bir kapı ve hatasını düzeltmeye çalışan bir kahraman.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Annesini kaybeden bir çocuğu dişi bir kaplan büyütmüş. Yıllar sonra bir şehzadeyle dost olmuş ve saraya gelmiş. Gücüyle tanınan Kaplan Adam, ordunun başına geçmiş. Kendisine sarayın anahtarları verilmiş, yalnız kırkıncı odayı açmaması söylenmiş.</p>
+          <p>Merakına yenilip kapıyı açınca içerideki adamın yalanlarına inanmış ve onu serbest bırakmış. Oysa bu adam, padişahın torunu Bilge’yi kaçıran kişiymiş. Kaplan Adam yaptığı yanlışı saklamamış; Bilge’yi bulmak için şehzadeyle yola çıkmış.</p>
+          <p>Yolculukta edindiği büyülü araçlarla uzak bir dağa ulaşmış. Kaçıran adamın gücünün beyaz, canının siyah bir güvercine bağlı olduğunu öğrenmiş. Güvercinlerin saklandığı kutuları ele geçirirken bir elini kaybetmiş. Adamın gücünü yok etmiş, canını ise bağışlamış. Bilge’yi kurtarıp şehzadeyle birlikte saraya dönmüş. Padişahın büyük ödülünü kabul etmemiş; kendi hatasını düzeltmenin ayrıca ödül gerektirmediğini söylemiş.</p>
+          <p class="kaynak">Kaynak: <a href="https://www.okuryazar.com.tr/dergi/kirkinci-oda" target="_blank" rel="noopener">Okuryazar — Naki Tezel, Türk Masalları I aktarımı</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+      <article class="kart">
+        <span class="numara">07</span>
+        <h3>Korkak Adam ve Devler</h3>
+        <p>Korkusunu gizleyerek devleri şaşırtan bir adam.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Çok korkak bir adam evinden uzaklaşmış ve kırk devin yaşadığı yere varmış. Kendini onların dedesi olarak tanıtmış. Devler bu küçük adamın gerçekten güçlü olup olmadığını anlamaya çalışmış.</p>
+          <p>Adam, devlerin gece kendisini öldürmeyi tasarladığını duymuş. Yatağına bir kütük koyup saklanmış. Sabah ortaya çıkarak gece yalnızca pirelerden rahatsız olduğunu söylemiş. Devler onun darbelerden bile etkilenmediğini sanmış.</p>
+          <p>Daha sonra güç yarışmalarına girişmişler. Adam, yürürken toz kaldırma yarışında çizmelerine doldurduğu tozdan yararlanmış. Taştan su çıkarma yarışında ise taşların arasına peynir saklayıp sıkarak devleri kandırmış. Her oyunda gözlerinde daha da büyümüş. Sonunda devler ona altın verip evine kadar taşımış. Adam, korkuyla başladığı yolculuktan hileleri sayesinde kazançlı dönmüş ve yaşadıklarını karısına anlatmış.</p>
+          <p class="kaynak">Kaynak: <a href="https://www.kulturportali.gov.tr/portal/korkakadamvedevler" target="_blank" rel="noopener">Türkiye Kültür Portalı — Salim Dalkıran derlemesi</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+      <article class="kart">
+        <span class="numara">08</span>
+        <h3>Değirmenci ile Tilki</h3>
+        <p>Yardım, yükseliş ve unutulan bir iyilik.</p>
+        <button type="button" class="oku" aria-controls="okuma">Masalı oku</button>
+        <!-- Bu bölüm, düğmeye basılınca okuma alanına kopyalanır. -->
+        <div class="hikaye" hidden>
+          <p>Bir değirmenci, tilkiye bir tavuk vermiş. Tilki de bu iyiliğe karşılık ona yardım edeceğini söylemiş. Padişahın karşısına çıkarak değirmenciyi güçlü ve zengin bir hükümdar gibi tanıtmış. Sözleriyle padişahı etkilemiş ve kızıyla bu adamın evlenmesini sağlamaya çalışmış.</p>
+          <p>Tilkinin kurduğu düzenler sayesinde değirmenci güzel giysilere, saraya ve padişahın kızıyla evlenme fırsatına kavuşmuş. Ancak tilki kendisi için yalnızca öldüğünde uygun biçimde gömülmeyi istemiş.</p>
+          <p>Değirmenciyi sınamak için bir gün ölü taklidi yapmış. Değirmenci onu pencereden dışarı attırmış. Tilki geri dönüp sözünü hatırlatınca adam yaptığını bir deneme gibi göstermiş. Ne var ki tilki gerçekten öldüğünde de verdiği sözü tutmamış. Kendisine yardım eden hayvanı yine dışarı attırmış. Masal, değirmencinin yükselişinin ardından ortaya çıkan bu nankörlükle bitmiş.</p>
+          <p class="kaynak">Kaynak: <a href="https://www.masalsitesi.com/Degirmenci-ile-Tilki-Masali.html" target="_blank" rel="noopener">Masal Sitesi — Değirmenci ile Tilki</a> (bağlantı için internet gerekir).</p>
+        </div>
+      </article>
+    </section>
+    <section id="okuma" aria-labelledby="masal-baslik" hidden>
+      <h2 id="masal-baslik" tabindex="-1"></h2>
+      <p class="anlatim">KISALTILMIŞ ANLATIM</p>
+      <button id="renk-degistir" type="button" aria-pressed="false">Okuma rengini değiştir</button>
+      <div id="masal-metin"></div>
+      <button id="kapat" type="button">Listeye dön</button>
+    </section>
+  </main>
+  <script>
+    // HTML içindeki alanları seçiyoruz.
+    const kartlar = document.querySelectorAll(".kart");
+    const arama = document.getElementById("arama");
+    const sonuc = document.getElementById("sonuc");
+    const okuma = document.getElementById("okuma");
+    const baslik = document.getElementById("masal-baslik");
+    const metin = document.getElementById("masal-metin");
+    const kapat = document.getElementById("kapat");
+    let sonDugme;
+
+    // Her kartın düğmesine aynı tıklama işlemini bağlıyoruz.
+    kartlar.forEach(function (kart) {
+      const dugme = kart.querySelector(".oku");
+      dugme.addEventListener("click", function () {
+        sonDugme = dugme;
+        baslik.textContent = kart.querySelector("h3").textContent;
+        // Yalnızca bu dosyada bulunan hazır masal içeriğini kopyalıyoruz.
+        metin.innerHTML = kart.querySelector(".hikaye").innerHTML;
+        okuma.hidden = false;
+        baslik.focus({ preventScroll: true });
+        okuma.scrollIntoView({ block: "start" });
+      });
+    });
+
+    // Yazılan kelimeyi masal başlıklarında arıyoruz.
+    arama.addEventListener("input", function () {
+      const kelime = arama.value.trim().toLocaleLowerCase("tr-TR");
+      let adet = 0;
+      kartlar.forEach(function (kart) {
+        const ad = kart.querySelector("h3").textContent.toLocaleLowerCase("tr-TR");
+        if (ad.includes(kelime)) {
+          kart.hidden = false;
+          adet = adet + 1;
+        } else {
+          kart.hidden = true;
+        }
+      });
+      sonuc.textContent = adet === 0 ? "Bu adla bir masal bulunamadı." : adet + " masal gösteriliyor.";
+      okuma.hidden = true;
+    });
+
+    // Okuma alanını kapatıp seçilen düğmeye dönüyoruz.
+    kapat.addEventListener("click", function () {
+      okuma.hidden = true;
+      if (sonDugme) { sonDugme.focus(); }
+    });
+    // Her tıklamada gece sınıfını ekliyor veya kaldırıyoruz.
+    const renkDugmesi = document.getElementById("renk-degistir");
+    renkDugmesi.addEventListener("click", function () {
+      const geceAcik = okuma.classList.toggle("gece");
+      renkDugmesi.setAttribute("aria-pressed", geceAcik);
+    });
+  </script>
+</body>
+</html>
