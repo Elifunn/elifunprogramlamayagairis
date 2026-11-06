@@ -18,6 +18,6 @@ Sayfa internet bağlantısı olmadan da çalışabilir.
 
 GitHub
 
-YouTube videosu : https://youtu.be/Vbze7OP_Z9A?si=JZqKNMIIZexW4kRH
+YouTube videosu : https://youtu.be/Vbze7OP_Z9A?si=c27F0HHS7kTZMh-B
 
 https://github.com/Elifunn/elifunprogramlamayagairis# elifunprogramlamayagairis
